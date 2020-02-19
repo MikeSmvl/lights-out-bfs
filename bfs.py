@@ -1,3 +1,6 @@
+import sys
+import json
+
 def getNodeVal(node) -> int:
 	"""Function that converts a node to an integer.
 	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
@@ -112,7 +115,6 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 						queue.append(new_path)
 						if child == goal_node:
 							level+=1
-							# print(level)
 							return new_path
 	# No solution found
 	return []
@@ -138,9 +140,19 @@ def print_solution(solution_list) -> 'Human Readable Solution':
 	except Exception as error_msg:
 		print("No solution found!")
 
-# Test BFS
-max_depth = 6
-start_node = [[1,1,0,1],[1,1,0,0],[0,1,1,0],[0,1,1,0]]
-goal_node = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-solution_list = bfs(start_node, goal_node, max_depth)
-print_solution(solution_list)
+# Main
+def main():
+	try:
+		max_depth = int(sys.argv[1])
+		start_node = json.loads(sys.argv[2])
+		goal_node = json.loads(sys.argv[3])
+		solution_list = bfs(start_node, goal_node, max_depth)
+		if solution_list == []:
+			print("No solution found!")
+		else:
+			print_solution(solution_list)
+	except Exception as error_msg:
+		print(error_msg)
+
+if __name__== "__main__":
+  main()
