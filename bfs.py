@@ -1,15 +1,17 @@
 import sys
 import json
+from collections import deque
+
 
 def getNodeVal(node) -> int:
 	"""Function that converts a node to an integer.
 	Ex: [[0,0,0],[1,0,1],[0,1,0]] -> 1*0 + 2*0 + 4*0 + 8*1 + 16*0 + 32*1 + 64*0 + 128*1 + 256*0 -> 168
 
 	Args:
-			node: The node to be converted to a value.
+		node: The node to be converted to a value.
 
 	Returns:
-			The return value. Integer representation of node.
+		The return value. Integer representation of node.
 	"""
 	val = 0
 	base = 1
@@ -24,10 +26,10 @@ def toggle_bit(bit) -> int:
 	"""Function that inverts bits.
 
 	Args:
-			bit: The bit to be inverted.
+		bit: The bit to be inverted.
 
 	Returns:
-			The return value. 0 if bit was 1 and 1 if bit was 0.
+		The return value. 0 if bit was 1 and 1 if bit was 0.
 	"""
 	return 1 if bit == 0 else 0
 
@@ -36,11 +38,11 @@ def toggle(node, row, col) -> "child":
 	"""Function that toggles a node at a certain row and col and returns child.
 
 	Args:
-			node: The node to be toggled.
-			row, col:	The row and col pair to toggle.
+		node: The node to be toggled.
+		row, col:	The row and col pair to toggle.
 
 	Returns:
-			The child of the node.
+		The child of the node.
 	"""
 	new_node = []
 	for r in node:
@@ -63,13 +65,13 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 	"""Breadth-first search (BFS) function.
 
 	Args:
-			start_node: The beginning node.
-			goal_node: The node to try and reach.
+		start_node: The beginning node.
+		goal_node: The node to try and reach.
 
 	Returns:
-			The path (list) taken to reach the node if any.
+		The path (list) taken to reach the node if any.
 	"""
-	queue = [start_node,[]]
+	d = deque([start_node,[]])
 	explored = {}
 	level = 0
 
@@ -77,9 +79,9 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 	if start_node == goal_node:
 		return []
 
-	# Keep exploring while the queue has nodes
-	while len(queue) > 0:
-		path = queue.pop(0)
+	# Keep exploring while the deque has nodes
+	while len(d) > 0:
+		path = d.popleft()
 
 		if level == 0:
 			node = path
@@ -96,7 +98,7 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 			# Return empty list if max depth was reached
 			if max_depth == level:
 				return []
-			queue.append(node)
+			d.append(node)
 
 		else:
 			val = getNodeVal(node)
@@ -112,7 +114,7 @@ def bfs(start_node, goal_node, max_depth) -> "solution path":
 						if level == 0:
 							new_path = [new_path]
 						new_path.append(child)
-						queue.append(new_path)
+						d.append(new_path)
 						if child == goal_node:
 							level+=1
 							return new_path
@@ -123,10 +125,10 @@ def print_solution(solution_list) -> 'Human Readable Solution':
 	"""Function that converts a list in to a readable format
 
 	Args:
-			solution_list: The list that the BFS function returned.
+		solution_list: The list that the BFS function returned.
 
 	Returns:
-			The return value. String readable representation of solution.
+		The return value. String readable representation of solution.
 	"""
 	size = len(solution_list[0][0])
 	try:
@@ -140,19 +142,25 @@ def print_solution(solution_list) -> 'Human Readable Solution':
 	except Exception as error_msg:
 		print("No solution found!")
 
-# Main
+
 def main():
 	try:
+		# Get command-line arguments
 		max_depth = int(sys.argv[1])
 		start_node = json.loads(sys.argv[2])
 		goal_node = json.loads(sys.argv[3])
+
+		# BFS using arguments
 		solution_list = bfs(start_node, goal_node, max_depth)
-		if solution_list == []:
-			print("No solution found!")
-		else:
+
+		if solution_list != []:
 			print_solution(solution_list)
+		else:
+			print("No solution found!")
+
 	except Exception as error_msg:
 		print(error_msg)
+
 
 if __name__== "__main__":
   main()
