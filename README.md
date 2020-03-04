@@ -19,7 +19,7 @@ To solve the following puzzle with a maximum depth of 5:
 ## Usage
 
 ```bash
-$ python bfs.py 5 '[[1,1,0],[0,1,0],[0,1,1]]' '[[0,0,0],[0,0,0],[0,0,0]]'
+$ python3 bfs.py 5 '[[1,1,0],[0,1,0],[0,1,1]]' '[[0,0,0],[0,0,0],[0,0,0]]'
 
 #    Starting Node
 # --------------------
